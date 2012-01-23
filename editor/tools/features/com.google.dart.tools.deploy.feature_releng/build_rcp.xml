@@ -1,0 +1,625 @@
+<!--
+This build script will build the Dart RCP and Dart update site.  
+
+This script will setup the PDE build structure and then call into the PDE
+build system.  The PDE build system has to run under Eclipse.
+-->
+<project name="build_dart" default="build_rcp">
+    
+    <import file="build-common.xml" />
+
+    <target name="deploy_rcp" depends="build_rcp, doDeploy_rcp" />
+    
+    <target name="build_rcp" depends="init, setupBuild, doBuild_rcp, package_rcp" />
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: buildBot
+         - - - - - - - - - - - - - - - - - -->
+    <target name="buildBotFastFail">
+        <echoProperty propertyname="user.name" />
+        <echoProperty propertyname="build.root" />
+        <echoProperty propertyname="build.out" />
+        <echoProperty propertyname="build.source" />
+        
+        <condition property="build.running.headless" value="true">
+            <equals arg1="chrome-bot" arg2="${user.name}" trim="true" />
+        </condition>
+        <property name="build.running.headless" value="false" />
+        
+        <fail>
+            <condition>
+                <and>
+                    <istrue value="${build.running.headless}" />
+                    <not>
+                        <and>
+                            <isset property="build.root" />
+                            <isset property="build.out" />
+                            <isset property="build.source" />
+                        </and>
+                    </not>
+                </and>
+            </condition>
+            This code is running under BuildBot and the following properties are not set at the 
+            start of the build:
+            build.root
+            build.out
+            build.source
+            These properties should have been set by the Python code
+        </fail>
+    </target>
+    
+    <!-- configure and validate the data location -->
+    <target name="configDataLocation">
+        <property name="data.location" location="./build-settings" />
+        <echoProperty propertyName="data.location" />
+        <!--
+          validate that the data location is a directory
+        -->
+        <fail>*
+            **********************************
+            Error: 
+            data.location must be set to a valid directory containing 
+            the configuration properties file.
+            the current value is ${data.location}.
+            **********************************
+            <condition>
+                <not>
+                    <available file="${data.location}" type="dir" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+    
+    <!-- conditiuonally read the os specific property file -->
+    <target name="readOsSpecificPropertyFile" if="build.os">
+        <property name="user.os.property.file" location="${data.location}/${user.name}.${build.os}.properties" />
+        <fail>*
+            **********************************
+            Error: 
+            ${user.os.property.file} must exist.
+            In the directory ${data.location}
+            look at ${data.location}/chrome-bot.linux.properties
+            and use it as a template to create 
+            ${user.os.property.file}
+            **********************************
+            <condition>
+                <not>
+                    <available file="${user.os.property.file}" type="file" />
+                </not>
+            </condition>
+        </fail>
+        <echo message="reading ${user.os.property.file}" />
+        <property file="${user.os.property.file}" />
+    </target>
+    
+    <!-- read the properties files -->
+    <target name="readProperties" depends="readOsSpecificPropertyFile">
+        <property name="user.property.file" location="${data.location}/${user.name}.properties" /> 
+        <property name="default-user.property.file" location="${data.location}/default-user.properties" /> 
+        <property name="eclipse.property.file" location="${data.location}/eclipse-platform.properties" />
+        <echo message="reading ${eclipse.property.file}" />
+        <property file="${eclipse.property.file}" />
+        <!--
+          validate that the ${user.name}.property file exists
+        -->
+        <fail>*
+            **********************************
+            Error: 
+            ${user.property.file} must exist.
+            In the directory ${data.location}
+            copy the "user.properties" file to "${user.name}.properties"
+            and adjust the content for your build situation
+            **********************************
+            <condition>
+                <not>
+                    <available file="${user.property.file}" type="file" />
+                </not>
+            </condition>
+        </fail>
+        <echo message="reading ${user.property.file}" />
+        <property file="${user.property.file}" />
+        
+        <!--
+          validate that the default-user.property file exists
+        -->
+        <fail>Error: 
+            ${default-user.property.file} must exist.
+            <condition>
+                <not>
+                    <available file="${default-user.property.file}" type="file" />
+                </not>
+            </condition>
+        </fail>
+        <echo message="reading ${default-user.property.file}" />
+        <property file="${default-user.property.file}" />
+     </target>
+    
+    <!--
+    initializethe build environment by cleaning up the builchrome-botd.tmp directory and 
+    creating the needed directories
+    -->
+    <target name="init" depends="setOS, buildBotFastFail, configDataLocation, readProperties">
+        <property environment="env" />
+        <echoproperties prefix="env." />
+
+        <tstamp>
+            <format property="build.date" pattern="yyyyMMddHHmm" />
+        </tstamp>
+        <echoProperty propertyName="ant.file" />
+        <echoProperty propertyName="ant.home" />
+        <echoProperty propertyName="ant.version" />
+        <echoProperty propertyName="java.home" />
+        <echoProperty propertyName="java.vendor" />
+        <echoProperty propertyName="java.version" />
+        <echoProperty propertyName="user.name" />
+        <echoProperty propertyName="dataLocation" />
+        <condition property="data.location" value="${dataLocation}">
+            <isset property="dataLocation" />
+        </condition>
+        
+        <!-- 
+          validate the the build.source is correctly set
+          by verifying that ${build.source}/docs/README.txt exists
+        -->
+        <fail>*
+            **********************************
+            Error: 
+            build.source must point to [svnroot]/dart/editor (root of the Dart Editor source tree) 
+            as obtained from http://code.google.com/p/dart/wiki/GettingTheSource?tm=4
+            Current value: ${build.source}.
+            **********************************
+            <condition>
+                <not>
+                    <available file="${build.source}/docs/README.txt" type="file" />
+                </not>
+            </condition>
+        </fail>
+        
+        <condition property="build.revision" value="${env.BUILDBOT_GOT_REVISION}">
+            <isset property="env.BUILDBOT_GOT_REVISION" />
+        </condition>
+        <property name="build.revision" value="unknown" />
+        <dirname file="${build.source}" property="build.source.root"/>
+
+        <property name="build.thirdparty" location="${build.source.root}/third_party" />
+        
+        <property name="build.stage.scripts" location="${build.stage}/scripts" />
+        <echoproperties prefix="java." />
+        <echoproperties prefix="build." />
+        <property name="build.runtime.abs" location="${build.runtime}" />
+        <property name="build.target.abs" location="${build.target}" />
+        <property name="build.stage.abs" location="${build.stage}" />
+        <property name="build.out.property.file"
+                  value="${java.io.tmpdir}/dart-build.properties" />
+        <echoproperties prefix="build." destfile="${build.out.property.file}"/>
+        <echoProperty propertyName="eclipse-sdk.3.8.url" />
+        <echoProperty propertyName="eclipse-sdk.3.8.linux.gtk.x86.zip" />
+        <echoProperty propertyName="eclipse-sdk.3.7.url" />
+        <echoProperty propertyName="eclipse-sdk.3.7.linux.gtk.x86.zip" />
+        <!--
+        cleanup build directories
+        -->
+        <delete failonerror="false" includeemptydirs="true">
+            <fileset dir="${build.tmp}" />
+            <fileset dir="${build.out}" />
+        </delete>
+        <!--
+        create the build structure
+        -->
+        <mkdir dir="${build.downloads}" />
+
+        <mkdir dir="${build.runtime}" />
+        <mkdir dir="${build.target}" />
+        <mkdir dir="${build.stage.plugins}" />
+        <mkdir dir="${build.stage.features}" />
+        <mkdir dir="${build.out}" />
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: buildLibraries
+         - - - - - - - - - - - - - - - - - -->
+    <target name="buildLibraries" depends="init">
+        <property name="libraries.out.name" value="libraries"/>
+        <property name="libraries.out.dir" location="${build.stage.include.dir}/${libraries.out.name}" />
+        <delete dir="${libraries.out.dir}"/>
+        
+        <!-- dart:core and dart:coreimpl 
+            copy "core" source directorys into a single temp directory before building libraries
+            and copy dart:coreimpl into its own directory to match sdk
+        -->
+        <mkdir dir="${build.tmp}/lib/core-dartc"/>
+        <copy todir="${build.tmp}/lib/core-dartc">
+            <fileset dir="${build.source.root}/corelib"/>
+            <fileset dir="${build.source.root}/compiler/lib"/>
+        </copy>
+        <replace file="${build.tmp}/lib/core-dartc/corelib.dart" token="corelib_impl.dart" value="dart:coreimpl"/>
+        <copyDartLib name="core" dir="${build.tmp}/lib/core-dartc" libfile="corelib.dart"/>
+        <copyDartLib name="coreimpl" dir="${build.tmp}/lib/core-dartc" libfile="corelib_impl.dart"/>
+        
+        <!-- dart:dom -->
+        <copyDartLib name="dom" dir="${build.source.root}/client/dom"/>
+        
+        <!-- dart:html -->
+        <copyDartLib name="html" dir="${build.source.root}/client/html"/>
+        <copyDartLib name="htmlimpl" dir="${build.source.root}/client/html"/>
+        
+        <!-- dart:json -->
+        <copyDartLib name="json" dir="${build.source.root}/client/json"/>
+        
+        <!-- dart:builtin -->
+        <copy todir="${libraries.out.dir}/builtin">
+            <fileset dir="${build.source.root}/runtime/bin" includes="*.dart"/>
+        </copy>
+        
+        <!-- dart:nativewrappers -->
+        <mkdir dir="${libraries.out.dir}/nativewrappers"/>
+        <echo file="${libraries.out.dir}/nativewrappers/nativewrappers.dart">
+#library("nativewrappers");
+
+#source("../builtin/buffer_list.dart");
+#source("../builtin/chunked_stream.dart");
+#source("../builtin/directory.dart");
+#source("../builtin/directory_impl.dart");
+#source("../builtin/file.dart");
+#source("../builtin/file_impl.dart");
+#source("../builtin/input_stream.dart");
+#source("../builtin/list_stream.dart");
+#source("../builtin/output_stream.dart");
+#source("../builtin/platform.dart");
+#source("../builtin/platform_impl.dart");
+#source("../builtin/process.dart");
+#source("../builtin/socket.dart");
+#source("../builtin/socket_impl.dart");
+#source("../builtin/socket_stream.dart");
+#source("../builtin/stream_util.dart");
+#source("../builtin/string_stream.dart");
+#source("../builtin/timer.dart");
+        </echo>
+        <!-- #source("../builtin/eventhandler.dart"); -->
+        <!-- #source("../builtin/timer_impl.dart"); -->        
+        <!-- #source("../builtin/process_impl.dart"); -->
+        
+        <makeReadonly directoryName="${libraries.out.dir}"/>
+    </target>
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: getSdk
+         - - - - - - - - - - - - - - - - - -->
+    <target name="getSdk" if="osfamily" depends="setOS">
+        <delete file="${build.dart.sdk.zip}"/>
+        <get src="http://gsdview.appspot.com/dart-editor-archive-continuous/latest/dart-${osfamily}.zip"
+             dest="${build.dart.sdk.zip}" />
+        <delete dir="${build.stage.include.dir}/dart-sdk"/>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: installSdkInWindows
+          Use the standard Ant unzip task to install the sdk
+         - - - - - - - - - - - - - - - - - -->
+    <target name="installSdkInWindows" if="isWindows" depends="getSdk">
+        <unzip src="${build.dart.sdk.zip}" dest="${build.stage.include.dir}" />
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: installSdkInNonWindows
+          The standard Ant unzip task destroys execute permissions in the sdk
+          so use the command line unzip instead
+         - - - - - - - - - - - - - - - - - -->
+    <target name="installSdkInNonWindows" if="isNotWindows" depends="getSdk">
+        <exec executable="unzip" dir="${build.stage.include.dir}">
+            <arg value="${build.dart.sdk.zip}"/>
+        </exec>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - - 
+          target: installSdk
+          Install the sdk zip if build.os is set
+         - - - - - - - - - - - - - - - - - -->
+    <target name="installSdk" depends="installSdkInNonWindows, installSdkInWindows">
+    </target>
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: setupDevWorkspace
+         - - - - - - - - - - - - - - - - - -->
+    <target name="setupDevWorkspace" 
+            depends="buildLibraries, installSdkInDevWorkspace">
+        <property name="libraries.dev.dir" location="${eclipse.home}/${libraries.out.name}"/>
+        <echo message="Copying ${libraries.out.dir}"/>
+        <echo message="to ${libraries.dev.dir}"/>
+        <delete dir="${libraries.dev.dir}"/>
+        <mkdir dir="${libraries.dev.dir}"/>
+        <copy todir="${libraries.dev.dir}">
+          <fileset dir="${libraries.out.dir}"/>
+        </copy>
+        <makeReadonly directoryName="${libraries.dev.dir}"/>
+    </target>
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: initSdkInDevWorkspace
+         - - - - - - - - - - - - - - - - - -->
+    <target name="initSdkInDevWorkspace" depends="setOS">
+        <!-- This build script must be executed in Eclipse 
+          so that the ${eclipse.home} Ant property is defined -->
+        <fail unless="eclipse.home">*
+            **********************************
+            Execute this Ant script inside Eclipse
+            and select the 'Run in the same JRE as the workspace' option
+            on the 'JRE' tab of the launch dialog
+            -- OR --
+            Define the "eclipse.home" property to point to your Eclipse installation
+            **********************************
+        </fail>
+        <property name="build.stage.include.dir" location="${eclipse.home}"/>
+        <property name="build.dart.sdk.zip" location="${eclipse.home}/dart-sdk.zip"/>
+        <property name="build.os" value="true"/>
+    </target>
+
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: installSdkInDevWorkspace
+         - - - - - - - - - - - - - - - - - -->
+    <target name="installSdkInDevWorkspace" depends="initSdkInDevWorkspace, installSdk">
+    </target>
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: setupRuntimeEclipse
+         - - - - - - - - - - - - - - - - - -->
+    <target name="setupRuntimeEclipse">
+        <setupEclipse location="${build.runtime}" version="${build.runtime.eclipse.version}"
+                      arch="${build.eclipse.arch}" os.ws="${build.eclipse.os.ws}" />
+        <fileset dir="${build.runtime}/eclipse/plugins" id="launcherFs" >
+            <include name="*launcher_*.jar" />
+        </fileset>
+        <pathconvert property="eclipse.runtime.launcher.jar" refid="launcherFs" />
+    </target>
+
+    <!--
+    copy the code from the svn structure to the PDE structure and get rid of the linked resources
+    -->
+    <target name="setupBuild" depends="init, buildLibraries, installSdk, setupRuntimeEclipse" >
+        <setupTargetEclipse location="${build.target}" eclipse="${build.target.eclipse.version}"
+                            arch="${build.eclipse.arch}" />
+        <!-- installDirIntoTargetEclipse updatesite="${build.source.root}/third_party/chromesdk/0.3.0"
+                                     ius="org.chromium.sdk.feature.group"
+                                     uniqueId="chrome"/ -->
+        <!-- installDirIntoTargetEclipse updatesite="${build.source.root}/third_party/usageprofiler"
+                                     ius="com.google.gdt.eclipse.usageprofiler.feature.feature.group"
+                                     uniqueId="profiler"/-->
+        
+        <ant antfile="build.xml" dir="${build.source.root}/third_party/closure_compiler_src"
+             inheritall="false" inheritrefs="false" />
+        <property name="eclipse.runtime.dir"
+                  value="${build.runtime}/eclipse" />
+        <mkdir dir="${build.stage.plugins}" />
+        <mkdir dir="${build.stage.features}" />
+
+        <copy todir="${build.stage.plugins}">
+            <fileset dir="${build.source}/tools/plugins">
+                <exclude name="*_test/**" />
+                <exclude name="**/bin/**" />
+            </fileset>
+        </copy>
+        <copy todir="${build.stage.features}">
+            <fileset dir="${build.source}/tools/features">
+                <exclude name="*.debug.*/**" />
+                <exclude name="*.tests.*/**" />
+            </fileset>
+        </copy>
+        
+        <replace dir="${build.stage.features}/com.google.dart.tools.deploy.feature">
+            <include name="*.html" />
+            <include name="*.mappings" />
+            <replacefilter token="@BUILDDATE@" value="${build.date}" />
+            <replacefilter token="@REVISION@" value="${build.revision}" />
+        </replace>
+        <echo message="replacing @BUILDCONFIGS@ in ${build.stage.features}/com.google.dart.tools.deploy.feature_releng/build.properties" />
+        <replace dir="${build.stage.features}/com.google.dart.tools.deploy.feature_releng">
+            <include name="build.properties" />
+            <replacefilter token="@BUILDCONFIGS@" value="${build.configs}" />
+        </replace>
+        
+        <replace dir="${build.stage.plugins}/com.google.dart.tools.core" >
+            <include name="**/DartCore.java" />
+            <replacefilter token="@REVISION@" value="${build.revision}" />
+        </replace>
+
+        <!-- create the samples directory -->
+        <property name="samples.out.dir" 
+                  value="${build.stage.include.dir}/samples" />
+    
+        <!-- Clock -->
+        <copy todir="${samples.out.dir}/clock">
+            <fileset dir="${build.source.root}/samples/clock">
+            </fileset>
+        </copy>
+
+        <!-- Chat -->
+        <!-- Commented out - this references the json library in a relative path from server code -->
+        <!-- copy todir="${samples.out.dir}/chat">
+            <fileset dir="${build.source.root}/samples/chat">
+            </fileset>
+        </copy -->
+        
+        <!-- Time -->
+        <copy todir="${samples.out.dir}/time">
+            <fileset dir="${build.source.root}/samples/time"/>
+            <fileset dir="${build.source.root}/samples/chat">
+                <include name="http*"/>
+            </fileset>
+        </copy>
+        <replace dir="${samples.out.dir}/time"
+            token='#import("../chat/http.dart");'
+            value='#import("http.dart");'>
+            <include name="*.dart"/>
+        </replace>
+        <replace file="${samples.out.dir}/time/http.dart"
+            token='#library("http");'>
+            <replacevalue>#library("http");
+#import("dart:builtin");</replacevalue>
+        </replace>
+        
+        <!-- Hi -->
+        <!-- copy todir="${samples.out.dir}/hi">
+            <fileset dir="${build.source.root}/client/samples/hi">
+            </fileset>
+        </copy -->
+
+        <!-- Isolate -->
+        <copy todir="${samples.out.dir}/isolate">
+            <fileset dir="${build.source.root}/client/samples/isolate">
+              <exclude name="main.py"/>
+              <exclude name="deploy.sh"/>
+              <exclude name="app.yaml"/>
+            </fileset>
+        </copy>
+
+        <!-- Slider -->
+        <copy todir="${samples.out.dir}/slider">
+            <fileset dir="${build.source.root}/client/samples/slider">
+            </fileset>
+        </copy>
+
+        <!-- Swarm -->
+        <!-- copy todir="${samples.out.dir}/swarm">
+            <fileset dir="${build.source.root}/client/samples/swarm">
+            </fileset>
+        </copy -->
+
+        <!-- Sunflower -->
+        <copy todir="${samples.out.dir}/sunflower">
+            <fileset dir="${build.source.root}/client/samples/sunflower">
+            </fileset>
+        </copy>
+
+        <!-- Total -->
+        <copy todir="${samples.out.dir}/total">
+            <fileset dir="${build.source.root}/client/samples/total">
+              <exclude name="bin/**"/>
+              <exclude name=".project"/>
+              <exclude name="src/Server.dart"/>
+            </fileset>
+        </copy>
+
+        <replace dir="${samples.out.dir}"
+          token='script type="application/dart"'
+          value='script type="text/javascript"'>
+          <include name="**/*.html"/>
+        </replace>
+
+        <replace dir="${samples.out.dir}"
+          token='.dart"'
+          value='.dart.app.js"'>
+          <include name="**/*.html"/>
+        </replace>
+
+        <!-- copy bundled Dart libraries -->
+        <property name="dart.compiler.js.dir" 
+                  value="${build.stage.plugins}/com.google.dart.compiler.js" />
+        <mkdir dir="${dart.compiler.js.dir}/src-compiler" />
+        <copy todir="${dart.compiler.js.dir}/src-compiler">
+             <fileset dir="${build.source.root}/compiler/java" />
+        </copy>
+        
+        <mkdir dir="${dart.compiler.js.dir}/third_party" />
+        <copy todir="${dart.compiler.js.dir}/third_party">
+            <fileset dir="${build.source.root}/third_party" />
+        </copy>
+        
+        <!-- copy over the dart libraries used by the samples -->
+
+        <property name="samples.libraries.out.dir" 
+                  value="${build.stage.include.dir}/samples/libraries" />
+
+        <copy todir="${samples.libraries.out.dir}/base">
+            <fileset dir="${build.source.root}/client/base"/>
+        </copy>
+        <copy todir="${samples.libraries.out.dir}/layout">
+            <fileset dir="${build.source.root}/client/layout"/>
+        </copy>
+        <copy todir="${samples.libraries.out.dir}/observable">
+            <fileset dir="${build.source.root}/client/observable"/>
+        </copy>
+        <copy todir="${samples.libraries.out.dir}/touch">
+            <fileset dir="${build.source.root}/client/touch"/>
+        </copy>
+        <copy todir="${samples.libraries.out.dir}/util">
+            <fileset dir="${build.source.root}/client/util"/>
+        </copy>
+        <copy todir="${samples.libraries.out.dir}/view">
+            <fileset dir="${build.source.root}/client/view"/>
+        </copy>
+        
+        <!-- patch up the html library references -->
+                  
+        <replace dir="${build.stage.include.dir}"
+          token='../../../html/html.dart'
+          value='dart:html'>
+            <include name="**/*.dart"/>
+        </replace>
+        <replace dir="${build.stage.include.dir}"
+          token='../../html/html.dart'
+          value='dart:html'>
+            <include name="**/*.dart"/>
+        </replace>
+        <replace dir="${build.stage.include.dir}"
+          token='../html/html.dart'
+          value='dart:html'>
+            <include name="**/*.dart"/>
+        </replace>
+        
+        <!-- replace the path based imports with the symbolic ones -->
+
+        <replace dir="${samples.out.dir}"
+          token="#import('../../"
+          value="#import('../libraries/">
+            <include name="**/*.dart"/>
+        </replace>
+
+        <replace dir="${samples.out.dir}"
+          token='href="../../'
+          value='href="../libraries/'>
+            <include name="**/*.html"/>
+        </replace>
+    </target>
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: doBuild_rcp              
+         - - - - - - - - - - - - - - - - - -->
+    <target name="doBuild_rcp" depends="init, setupBuild">
+        <dirset dir="${build.runtime}/eclipse/plugins" id="pde.ds">
+            <include name="*pde.build_*" />
+        </dirset>
+        <pathconvert property="pde.build.dir" refid="pde.ds" setonempty="false"/>
+        <property name="pde.scripts.update" location="${pde.build.dir}/scripts" />
+        <property name="pde.scripts.rcp" location="${pde.build.dir}/scripts/productBuild" />
+        <echo message="PDE is located in ${pde.build.dir}" /> 
+        <mkdir dir="${build.stage.scripts}" />
+        <copy todir="${build.stage.scripts}">
+            <fileset  dir="${build.stage.features}/com.google.dart.tools.deploy.feature_releng">
+                <include name="build.properties" />
+            </fileset>
+        </copy>
+        <runAntBuildInEclipse script="${pde.scripts.rcp}/productBuild.xml" eclipse="3.7"
+                              builddir="${build.stage.scripts}" />
+    </target>
+    
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: package_rcp                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="package_rcp" depends="init, setupBuild, doBuild_rcp" >
+        <property file="build.properties" prefix="pde." />
+        <echo message="copying zip files from ${build.stage}/${pde.buildLabel} to ${build.out}"/>
+        <copy todir="${build.out}" verbose="true">
+            <fileset dir="${build.stage}/${pde.buildLabel}">
+                <include name="*.zip" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: doDeploy_rcp                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="doDeploy_rcp" depends="init, setupBuild, doBuild_rcp, package_rcp">
+    </target>
+
+</project>

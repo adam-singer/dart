@@ -1,0 +1,11 @@
+
+class SVGNumber native "*SVGNumber" {
+
+  num get value() native "return this.value;";
+
+  void set value(num value) native "this.value = value;";
+
+  var dartObjectLocalStorage;
+
+  String get typeName() native;
+}

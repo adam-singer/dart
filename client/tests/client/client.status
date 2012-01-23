@@ -1,0 +1,55 @@
+# Copyright (c) 2011, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+prefix client
+
+[ $component == dartium ]
+samples/dartcombat/dartcombat_tests: Skip # Bug 5279716
+touch/touch_tests: Skip  # Issue 157.
+layout/layout_tests: Fail  # Issue 152.
+
+[ $component == chromium ]
+layout/layout_tests: Skip  # Issue 152.
+touch/touch_tests: Skip  # Issue 157.
+html/html_tests: Skip  # Doesn't recognize SVGElement constructors
+samples/dartcombat/dartcombat_tests: Skip # Issue 1218
+
+[ $component == frogium || ($component == webdriver && ($browser == chrome || $browser == ff || $browser == safari)) ]
+touch/touch_tests: Skip  # Issue 157.
+layout/layout_tests: Skip # Issue 152, also seems flaky
+samples/dartcombat/dartcombat_tests: Skip # passes locally but timeout on bot?
+json/json_tests: Pass
+samples/total/total_tests: Skip # Issue 867.
+
+[ $component == webdriver && ($browser == ff || $browser == safari) ]
+samples/swarm/swarm_tests: Fail
+
+[ $component == webdriver && $browser == safari ]
+samples/smoketest/dartWebBase_tests: Fail
+
+[ $component == webdriver && $browser == ie && ($system == linux || $system == mac) ]
+*: Skip
+
+[ $component == webdriver && $browser == safari && ($system == linux || $system == windows) ]
+*: Skip
+
+[ $component == chromium && $mode == release ]
+
+
+# 'client' tests import the DOM library, so they only make sense in
+# a browser environment.
+[ $component == dartc ]
+*: Skip
+
+[ $component == vm ]
+*: Skip
+
+[ $component == leg ]
+*: Skip
+
+[ $component == frog ]
+*: Skip
+
+[ $component == frogsh ]
+*: Skip

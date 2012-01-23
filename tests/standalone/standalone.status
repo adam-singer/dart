@@ -1,0 +1,78 @@
+# Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+prefix standalone
+
+[ $component == vm && $checked ]
+# These tests have type errors on purpose.
+ProcessInvalidArgumentsTest: Fail, OK
+DirectoryInvalidArgumentsTest: Fail, OK
+FileInvalidArgumentsTest: Fail, OK
+
+[ $component == vm]
+ManyEchoServerTest: Skip        # Bug 5103754
+# These tests fail, crash, and timeout to test the testing infrastructure.
+FailTest: Fail
+TimeoutTest: Skip  # Uses too much time to test on many platforms, for no gain.
+
+[ $component == vm && $system == macos]
+# This test fails with "Too many open files" on the Mac OS buildbot.
+SocketManyConnectionsTest: Skip
+
+[ $component == dartium ]
+# Server specific tests OK to fail in the browser
+EchoServerTest: Skip  # Uses Socket
+EchoServerStreamTest: Skip # Uses Socket
+EchoServerStreamReadUntilTest: Skip # Uses Socket
+ManyEchoServerTest: Skip # Uses Socket
+SocketCloseTest: Skip # Uses Socket
+SocketExceptionTest: Skip # Uses Socket
+SocketManyConnectionsTest: Skip # Uses Socket
+SocketStreamCloseTest: Skip # Uses Socket
+ReadIntoConstList: Skip # Uses File
+FileTest: Skip
+ListInputStreamTest: Skip # Uses InputStream
+ListOutputStreamTest: Skip # Uses OutputStream
+ManyEchoServerTest: Skip  # Uses Socket
+TimerTest: Skip # Uses EventHandler
+TimerRepeatTest: Skip # Uses EventHandler
+MultipleTimerTest: Skip # Uses EventHandler
+TimerCancelTest: Skip # Uses EventHandler
+TimerCancel1Test: Skip # Uses EventHandler
+TimerCancel2Test: Skip # Uses EventHandler
+FileInputStreamTest: Skip  # Uses TextFileInputStream.
+Process*: Skip # Uses Process
+Directory*: Skip # Uses Directory
+StreamPipeTest: Skip # Uses Socket
+StringStreamTest: Skip # Uses InputStream
+StatusFileParserTest: Skip # Uses FileInputStream
+OptionsTest: Skip # Expects options being passed from command line.
+FailTest: Fail # Fails intentionally
+TimeoutTest: Skip # Uses Socket
+TestRunnerTest: Skip # Uses Process
+FileInvalidArgumentsTest: Skip # Uses File
+PlatformTest: Skip # Uses Platform
+ChunkedStreamTest: Skip # Uses InputStream
+
+[ $component == dartc || $component == chromium ]
+*: Skip
+
+[ $component == frog || $component == frogsh || $component == leg || $component == frogium ]
+*: Skip
+
+
+[ $component == frog || $component == frogsh ]
+*: Skip
+
+
+[ $arch == x64 ]
+MediumIntegerTest: Fail # Issue 1146.
+
+
+[ $arch == arm ]
+*: Skip
+
+
+[ $arch == simarm ]
+*: Skip

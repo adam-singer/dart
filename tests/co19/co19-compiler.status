@@ -1,0 +1,377 @@
+# Copyright (c) 2012, the Dart project authors. Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+prefix co19
+
+
+#
+# Problems specific to running on Mac OS X
+#
+
+[ $component == dartc && $system == macos ]
+LibTest/core/Math/acos/Math/acos/A01/t01: Fail # Issue co19 - 44
+LibTest/core/Math/asin/Math/asin/A01/t01: Fail # Issue co19 - 44
+LibTest/core/Math/atan/Math/atan/A01/t01: Fail  # Issue co19 - 44
+
+LibTest/core/String/toLowerCase/String/toLowerCase/A01/t04: Fail
+LibTest/core/String/toUpperCase/String/toUpperCase/A01/t04: Fail
+
+#
+# Problems specific to compiler in release build (--optimize)
+#
+[ $component == dartc && $mode == release ]
+
+LangGuideTest/02_Language_Constructs/02_11_Exceptions/A09/t02: Fail # Issue 219
+LangGuideTest/02_Language_Constructs/02_11_Exceptions/A09/t04: Fail # Issue 219
+LibTest/core/Date/Date.withTimeZone/Date/Date.withTimeZone/A01/t09: Fail # Issue 202
+LibTest/core/List/List/List/A01/t04: Fail                         # Issue 218
+LibTest/core/List/sort/List/sort/A01/t06: Skip                    # Out of memory.
+LibTest/core/Math/parseInt/Math/parseInt/A01/t01: Fail
+LibTest/core/Queue/Queue.from/Queue/Queue.from/A01/t02: Fail      # Issue 218
+LibTest/core/Set/add/Set/add/A01/t05: Fail                        # Bug 5392511
+LibTest/core/Set/addAll/Set/addAll/A01/t05: Fail                  # Bug 5392511
+LibTest/core/Set/contains/Set/contains/A01/t04: Fail              # Bug 5392511
+LibTest/core/Set/containsAll/Set/containsAll/A01/t04: Fail        # Bug 5392511
+LibTest/core/int/operator-/int/operator-/A01/t01: Fail
+LibTest/core/int/operator_div/int/operator/div/A01/t01: Fail
+LibTest/core/int/operator_~div/int/operator/~div/A01/t01: Fail
+LibTest/core/int/toInt/int/toInt/A01/t01: Fail
+
+#
+# Tests that pass in release mode but fail in debug mode
+#
+[ $component == dartc && $mode == debug ]
+
+LibTest/core/double/operatorDivision/double/operatorDivision/A01/t05: Fail
+LibTest/core/int/operator_l_shift/int/operator/l/shift/A01/t02: Fail
+LibTest/core/int/operator_l_shift/int/operator/l/shift/A01/t03: Fail
+LibTest/core/int/operator_r_shift/int/operator/r/shift/A01/t02: Fail
+LibTest/core/int/operator_r_shift/int/operator/r/shift/A01/t03: Fail
+
+#
+# Problems in both debug and release builds
+#
+[ $component == dartc ]
+
+LangGuideTest/02_Language_Constructs/02_11_Exceptions/A04/t01: Fail
+LangGuideTest/02_Language_Constructs/02_1_Class/02_1_Class_Const_Expressions/A04/t01: Fail # Bug 5371670.
+LangGuideTest/02_Language_Constructs/02_1_Class/02_1_Class_Construction/A10/t01: Fail # Bug 5371670.
+LangGuideTest/02_Language_Constructs/02_1_Class/A05/t01: Fail
+LangGuideTest/02_Language_Constructs/02_5_Meaning_of_Names/Examples/A02/t01: Fail # Bug 5371670.
+LangGuideTest/02_Language_Constructs/02_5_Meaning_of_Names/Shadowing_and_Hiding_Names/A01/t01: Fail
+LangGuideTest/02_Language_Constructs/02_5_Meaning_of_Names/Shadowing_and_Hiding_Names/A01/t02: Fail
+LangGuideTest/02_Language_Constructs/02_5_Meaning_of_Names/Shadowing_and_Hiding_Names/A02/t01: Fail
+LangGuideTest/03_Values/03_3_Strings/A03/t01: Fail
+LangGuideTest/04_Operators/04_2_Operations_on_basic_types/A02/t01: Fail
+LangGuideTest/05_Equality/05_1_Object_Identity_Equality/A01/t02: Fail
+LangGuideTest/05_Equality/05_1_Object_Identity_Equality/A01/t03: Fail
+LangGuideTest/07_Overriding/A03/t01: skip # Invalid test, Issue 1148
+LangGuideTest/07_Overriding/A03/t02: skip # Invalid test, Issue 1147
+LangGuideTest/08_Expressions/08_3_Compound_Assigment_Operators/Instance-Field_Compound_Assignment/A01/t01: Fail
+LangGuideTest/08_Expressions/08_3_Compound_Assigment_Operators/Instance-Field_Compound_Assignment/A02/t06: Fail
+LangGuideTest/08_Expressions/08_3_Compound_Assigment_Operators/Static-Field_Compound_Assignment/A01/t01: Fail
+LangGuideTest/08_Expressions/08_3_Compound_Assigment_Operators/Static-Field_Compound_Assignment/A02/t06: Fail
+LangGuideTest/08_Expressions/08_3_Compound_Assigment_Operators/Unqualified_Compound_Assignment/A01/t01: Fail
+LangGuideTest/08_Expressions/08_3_Compound_Assigment_Operators/Unqualified_Compound_Assignment/A02/t06: Fail
+LangSpecTest/13_Types/13_4_Interface_Types/A11/t04: Fail
+LangSpecTest/13_Types/13_4_Interface_Types/A12/t10: Fail
+LangSpecTest/13_Types/13_5_Function_Types/A01/t01: Fail # Bad test, Issue 59
+LangSpecTest/13_Types/13_5_Function_Types/A01/t13: Fail
+LangSpecTest/13_Types/13_5_Function_Types/A01/t14: Fail
+LangSpecTest/13_Types/13_5_Function_Types/A01/t15: Fail
+LangSpecTest/13_Types/13_5_Function_Types/A01/t18: Fail
+LangSpecTest/13_Types/13_8_Parameterized_Types/13/8/Parameterized/types/A01/t01: Fail # Bug 5532690
+LangSpecTest/13_Types/13_8_Parameterized_Types/13/8/Parameterized/types/A01/t02: Fail # Bug 5532690
+LangSpecTest/13_Types/13_8_Parameterized_Types/13/8/Parameterized/types/A01/t03: Fail # Bug 5532690
+LangSpecTest/13_Types/13_8_Parameterized_Types/13/8/Parameterized/types/A01/t04: Fail # Bug 5532690
+LibTest/core/AssertError/column/AssertError/column/A01/t01: Fail
+LibTest/core/AssertError/column/AssertError/column/A01/t02: Fail
+LibTest/core/AssertError/failedAssertion/AssertError/failedAssertion/A01/t01: Fail
+LibTest/core/AssertError/line/AssertError/line/A01/t01: Fail
+LibTest/core/AssertError/line/AssertError/line/A01/t02: Fail
+LibTest/core/AssertError/throwNew/AssertError/throwNew/A01/t01: Fail
+LibTest/core/AssertError/throwNew/AssertError/throwNew/A01/t02: Fail
+LibTest/core/AssertError/toString/AssertError/toString/A01/t01: Fail
+LibTest/core/AssertError/toString/AssertError/toString/A01/t02: Fail
+LibTest/core/AssertError/url/AssertError/url/A01/t01: Fail
+LibTest/core/AssertError/url/AssertError/url/A01/t02: Fail
+LibTest/core/Date/Date.fromEpoch/Date/Date.fromEpoch/A01/t02: Fail
+LibTest/core/Date/Date.fromString/Date/Date.fromString/A01/t02: Fail
+LibTest/core/Date/Date.fromString/Date/Date.fromString/A01/t03: Fail
+LibTest/core/Date/Date.fromString/Date/Date.fromString/A01/t04: Fail
+LibTest/core/Date/Date.fromString/Date/Date.fromString/A04/t01: Fail
+LibTest/core/Date/Date.fromString/Date/Date.fromString/A05/t01: Fail
+LibTest/core/Date/Date.withTimeZone/Date/Date.withTimeZone/A01/t02: Fail
+LibTest/core/Date/Date/Date/A01/t01: Fail
+LibTest/core/Date/Date/Date/A01/t02: Fail
+LibTest/core/Date/Date/Date/A01/t03: Fail
+LibTest/core/Date/toString/Date/toString/A02/t01: Fail
+LibTest/core/Date/weekday/Date/weekday/A01/t01: Fail
+LibTest/core/Date/year/Date/year/A01/t01: Fail
+LibTest/core/Dispatcher/Dispatcher_Dispatcher/A01/t01: Fail
+LibTest/core/Dispatcher/Dispatcher_serve/A01/t01: Fail
+LibTest/core/Duration/Duration/Duration/A03/t01: Fail
+LibTest/core/Expect/approxEquals/Expect/approxEquals/A03/t01: Fail
+LibTest/core/Expect/fail/Expect/fail/A02/t01: Fail
+LibTest/core/Expect/identical/Expect/identical/A01/t01: Fail
+LibTest/core/Expect/setEquals/Expect/setEquals/A01/t01: Fail
+LibTest/core/Expect/setEquals/Expect/setEquals/A01/t02: Fail
+LibTest/core/Expect/stringEquals/Expect/stringEquals/A02/t01: Fail
+LibTest/core/Expect/throws/Expect/throws/A02/t01: Fail
+LibTest/core/Expect/throws/Expect/throws/A03/t01: Fail
+LibTest/core/FallThroughError/line/FallThroughError/line/A01/t01: Fail
+LibTest/core/FallThroughError/line/FallThroughError/line/A01/t02: Fail
+LibTest/core/FallThroughError/throwNew/FallThroughError/throwNew/A01/t01: Fail
+LibTest/core/FallThroughError/throwNew/FallThroughError/throwNew/A01/t02: Fail
+LibTest/core/FallThroughError/toString/FallThroughError/toString/A01/t01: Fail
+LibTest/core/FallThroughError/url/FallThroughError/url/A01/t01: Fail
+LibTest/core/FallThroughError/url/FallThroughError/url/A01/t02: Fail
+LibTest/core/InternalError/InternalError/InternalError/A01/t01: Fail
+LibTest/core/InternalError/toString/InternalError/toString/A01/t01: Fail
+LibTest/core/Isolate/A01/t01: Fail
+LibTest/core/Isolate/A02/t01: Fail
+LibTest/core/Isolate/port/Isolate/port/A01/t01: Fail
+LibTest/core/Isolate/spawn/Isolate/spawn/A01/t07: Skip  # http://code.google.com/p/co19/issues/detail?id=13
+LibTest/core/Isolate/spawn/Isolate/spawn/A01/t09: Fail
+LibTest/core/Isolate/spawn/Isolate/spawn/A01/t10: Fail
+LibTest/core/Isolate/spawn/Isolate/spawn/A01/t11: Fail
+LibTest/core/Isolate/spawn/Isolate/spawn/A01/t12: Fail
+LibTest/core/List/List.fromList/*: Fail # List.fromList has been removed.
+LibTest/core/List/copyFrom/List/copyFrom/A01/t06: Fail
+LibTest/core/List/every/List/every/A01/t04: Fail
+LibTest/core/List/filter/List/filter/A01/t04: Fail
+LibTest/core/List/forEach/List/forEach/A01/t05: Fail
+LibTest/core/List/getRange/List/getRange/A01/t01: Fail
+LibTest/core/List/insertRange/List/insertRange/A01/t01: Fail
+LibTest/core/List/length/List/set/length/A01/t01: Fail
+LibTest/core/List/length/List/set/length/A03/t01: Fail
+LibTest/core/List/length/List/set/length/A05/t01: Fail
+LibTest/core/List/length/List/set/length/A06/t01: Fail
+LibTest/core/List/operator\[]/List/operator\[]/A01/t02: Fail
+LibTest/core/List/operator\[]/List/operator\[]/A02/t02: Fail
+LibTest/core/List/operator\[]/List/operator\[]/A03/t01: Fail
+LibTest/core/List/operator\[]=/List/operator\[]=/A02/t01: Fail
+LibTest/core/List/operator\[]=/List/operator\[]=/A03/t01: Fail
+LibTest/core/List/removeRange/List/removeRange/A01/t01: Fail
+LibTest/core/List/setRange/List/setRange/A01/t01: Fail
+LibTest/core/List/some/List/some/A01/t03: Fail
+LibTest/core/List/sort/List/sort/A01/t02: Fail
+LibTest/core/Map/forEach/Map/forEach/A01/t02: Fail
+LibTest/core/Map/putIfAbsent/Map/putIfAbsent/A01/t06: Fail
+LibTest/core/Map/putIfAbsent/Map/putIfAbsent/A01/t08: Fail
+LibTest/core/Match/group/Match/group/A01/t01: Fail
+LibTest/core/Match/group/Match/group/A02/t01: Fail
+LibTest/core/Match/groupCount/Match/groupCount/A01/t01: Fail
+LibTest/core/Match/groups/Match/groups/A01/t01: Fail
+LibTest/core/Match/groups/Match/groups/A02/t01: Fail
+LibTest/core/Match/operator\[]/Match/operator\[]/A01/t01: Fail
+LibTest/core/Match/operator\[]/Match/operator\[]/A02/t01: Fail
+LibTest/core/Match/pattern/Match/pattern/A01/t01: Fail
+LibTest/core/Math/acos/Math/acos/A01/t04: Fail
+LibTest/core/Math/asin/Math/asin/A01/t04: Fail
+LibTest/core/Math/atan/Math/atan/A01/t03: Fail
+LibTest/core/Math/atan2/Math/atan2/A01/t03: Fail
+LibTest/core/Math/atan2/Math/atan2/A01/t04: Fail
+LibTest/core/Math/cos/Math/cos/A01/t03: Fail
+LibTest/core/Math/exp/Math/exp/A01/t01: Fail
+LibTest/core/Math/exp/Math/exp/A01/t03: Fail
+LibTest/core/Math/log/Math/log/A01/t04: Fail
+LibTest/core/Math/max/Math/max/A01/t03: Fail
+LibTest/core/Math/min/Math/min/A01/t03: Fail
+LibTest/core/Math/pow/Math/pow/A01/t01: Fail
+LibTest/core/Math/pow/Math/pow/A11/t01: Fail
+LibTest/core/Math/pow/Math/pow/A13/t01: Fail
+LibTest/core/Math/pow/Math/pow/A19/t01: Fail
+LibTest/core/Math/sin/Math/sin/A01/t01: Fail
+LibTest/core/Math/sin/Math/sin/A01/t03: Fail
+LibTest/core/Math/sqrt/Math/sqrt/A01/t03: Fail
+LibTest/core/Math/sqrt/Math/sqrt/A01/t04: Fail
+LibTest/core/Math/tan/Math/tan/A01/t01: Fail
+LibTest/core/Math/tan/Math/tan/A01/t03: Fail
+LibTest/core/Promise/addCancelHandler/Promise/addCancelHandler/A01/t04: Fail
+LibTest/core/Promise/addCompleteHandler/Promise/addCompleteHandler/A01/t05: Fail
+LibTest/core/Promise/addErrorHandler/Promise/addErrorHandler/A01/t05: Fail
+LibTest/core/Promise/complete/Promise/complete/A01/t04: Fail
+LibTest/core/Promise/error/Promise/error/A01/t01: Fail
+LibTest/core/Promise/fail/Promise/fail/A01/t02: Fail
+LibTest/core/Promise/hasValue/Promise/hasValue/A01/t01: Fail
+LibTest/core/Promise/value/Promise/value/A01/t02: Fail
+LibTest/core/Promise/value/Promise/value/A01/t03: Fail
+LibTest/core/Promise/value/Promise/value/A01/t05: Fail
+LibTest/core/Promise/value/Promise/value/A01/t06: Fail
+LibTest/core/Promise/waitFor/Promise/waitFor/A01/t04: Fail
+LibTest/core/Proxy/Proxy.forIsolate/Proxy/Proxy.forIsolate/A01/t01: Fail
+LibTest/core/Proxy/Proxy.forIsolateWithPromise/Proxy/Proxy.forIsolateWithPromise/A01/t01: Fail
+LibTest/core/Proxy/Proxy.forPort/Proxy/Proxy.forPort/A01/t01: Fail
+LibTest/core/Proxy/Proxy.forReply/Proxy/Proxy.forReply/A01/t01: Fail
+LibTest/core/Proxy/call/Proxy/call/A01/t01: Fail
+LibTest/core/Proxy/local/Proxy/local/A01/t01: Fail
+LibTest/core/Proxy/operator==/Proxy/operator==/A01/t01: Fail
+LibTest/core/Proxy/register/Proxy/register/A01/t01: Fail
+LibTest/core/Proxy/send/Proxy/send/A01/t01: Fail
+LibTest/core/Queue/every/Queue/every/A01/t03: Fail
+LibTest/core/Queue/filter/Queue/filter/A01/t03: Fail
+LibTest/core/Queue/forEach/Queue/forEach/A01/t03: Fail
+LibTest/core/Queue/iterator_hasNext/Queue/iterator/hasNext/A01/t01: Skip # Timeout
+LibTest/core/Queue/some/Queue/some/A01/t03: Fail
+LibTest/core/ReceivePort/receive/ReceivePort/receive/A01/t02: Fail, Pass  # Fails for the wrong reason (open receive ports).
+LibTest/core/ReceivePort/toSendPort/ReceivePort/toSendPort/A02/t01: Fail
+LibTest/core/RegExp/RegExp/RegExp/A01/t03: Fail
+LibTest/core/RegExp/RegExp/RegExp/A01/t04: Fail
+LibTest/core/RegExp/allMatches/RegExp/allMatches/A01/t01: Fail
+LibTest/core/RegExp/allMatches/RegExp/allMatches/A02/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.03_Disjunction/RegExp/firstMatch/Disjunction/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.05_Term/RegExp/firstMatch/Term/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.05_Term/RegExp/firstMatch/Term/A02/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.05_Term/RegExp/firstMatch/Term/A03/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.05_Term/RegExp/firstMatch/Term/A04/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.07_Quantifier/RegExp/firstMatch/Quantifier/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.07_Quantifier/RegExp/firstMatch/Quantifier/A02/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.07_Quantifier/RegExp/firstMatch/Quantifier/A03/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.07_Quantifier/RegExp/firstMatch/Quantifier/A04/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.07_Quantifier/RegExp/firstMatch/Quantifier/A05/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.07_Quantifier/RegExp/firstMatch/Quantifier/A06/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A02/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A03/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A03/t02: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A03/t03: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A04/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A05/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.08_Atom/RegExp/firstMatch/Atom/A06/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.09_AtomEscape/RegExp/firstMatch/AtomEscape/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.10_CharacterEscape/RegExp/firstMatch/CharacterEscape/A06/t02: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.11_DecimalEscape/RegExp/firstMatch/DecimalEscape/A01/t02: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.12_CharacterClassEscape/RegExp/firstMatch/CharacterClassEscape/A03/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.12_CharacterClassEscape/RegExp/firstMatch/CharacterClassEscape/A04/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.13_CharacterClass/RegExp/firstMatch/CharacterClass/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.15_NonEmptyClassRanges/RegExp/firstMatch/NonEmptyClassRanges/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.15_NonEmptyClassRanges/RegExp/firstMatch/NonEmptyClassRanges/A01/t02: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.15_NonEmptyClassRanges/RegExp/firstMatch/NonEmptyClassRanges/A01/t03: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.15_NonEmptyClassRanges/RegExp/firstMatch/NonEmptyClassRanges/A01/t05: Fail
+LibTest/core/RegExp/firstMatch/Pattern_semantics/15.10.2.15_NonEmptyClassRanges/RegExp/firstMatch/NonEmptyClassRanges/A01/t06: Fail
+LibTest/core/RegExp/firstMatch/RegExp/firstMatch/A01/t01: Fail
+LibTest/core/RegExp/firstMatch/RegExp/firstMatch/A03/t01: Fail
+LibTest/core/RegExp/hasMatch/RegExp/hasMatch/A01/t02: Fail
+LibTest/core/RegExp/hasMatch/RegExp/hasMatch/A02/t01: Fail
+LibTest/core/RegExp/stringMatch/RegExp/stringMatch/A02/t01: Fail
+LibTest/core/SendPort/call/SendPort/call/A01/t01: Fail  # Open receive ports.
+LibTest/core/SendPort/send/SendPort/send/A02/t01: Fail
+LibTest/core/SendPort/send/SendPort/send/A03/t02: Fail
+LibTest/core/Set/filter/Set/filter/A01/t03: Fail
+LibTest/core/Set/forEach/Set/forEach/A01/t03: Fail
+LibTest/core/String/A02/t01: Fail
+LibTest/core/String/String.fromCharCodes/String/String.fromCharCodes/A02/t01: Fail
+LibTest/core/String/charCodeAt/String/charCodeAt/A01/t01: Fail
+LibTest/core/String/charCodeAt/String/charCodeAt/A03/t01: Fail
+LibTest/core/String/charCodes/String/charCodes/A01/t01: Fail
+LibTest/core/String/concat/String/concat/A02/t01: Fail
+LibTest/core/String/contains/String/contains/A02/t01: Fail
+LibTest/core/String/indexOf/String/indexOf/A01/t02: Fail
+LibTest/core/String/indexOf/String/indexOf/A03/t01: Fail
+LibTest/core/String/lastIndexOf/String/lastIndexOf/A01/t02: Fail
+LibTest/core/String/lastIndexOf/String/lastIndexOf/A03/t01: Fail
+LibTest/core/String/operator\+/String/operator\+/A01/t03: Fail
+LibTest/core/String/operator\+/String/operator\+/A01/t04: Fail
+LibTest/core/String/replaceAll/String/replaceAll/A02/t01: Fail
+LibTest/core/String/replaceFirst/String/replaceFirst/A01/t01: Fail
+LibTest/core/String/replaceFirst/String/replaceFirst/A02/t01: Fail
+LibTest/core/String/split/String/split/A02/t01: Fail
+LibTest/core/StringBuffer/StringBuffer/StringBuffer/A01/t02: Fail
+LibTest/core/StringBuffer/add/StringBuffer/add/A01/t02: Fail
+LibTest/core/StringBuffer/add/StringBuffer/add/A02/t01: Fail
+LibTest/core/StringBuffer/addAll/StringBuffer/addAll/A01/t02: Fail
+LibTest/core/StringBuffer/isEmpty/StringBuffer/isEmpty/A01/t01: Fail
+LibTest/core/Strings/concatAll/Strings/concatAll/A03/t01: Fail
+LibTest/core/Strings/join/Strings/join/A02/t01: Fail
+LibTest/core/Strings/join/Strings/join/A03/t01: Fail
+LibTest/core/TypeError/column/TypeError/column/A01/t01: Fail
+LibTest/core/TypeError/dstName/TypeError/dstName/A01/t01: Fail
+LibTest/core/TypeError/dstName/TypeError/dstName/A01/t01: Failpp
+LibTest/core/TypeError/dstType/TypeError/dstType/A01/t01: Fail
+LibTest/core/TypeError/failedAssertion/TypeError/failedAssertion/A01/t01: Fail
+LibTest/core/TypeError/line/TypeError/line/A01/t01: Fail
+LibTest/core/TypeError/srcType/TypeError/srcType/A01/t01: Fail
+LibTest/core/TypeError/toString/TypeError/toString/A01/t01: Fail
+LibTest/core/TypeError/url/TypeError/url/A01/t01: Fail
+LibTest/core/double/isEven/double/isEven/A01/t02: Fail
+LibTest/core/double/isEven/double/isEven/A01/t03: Fail
+LibTest/core/double/isEven/double/isEven/A01/t04: Fail
+LibTest/core/double/isEven/double/isEven/A01/t05: Fail
+LibTest/core/double/isNegative/double/isNegative/A01/t01: Fail
+LibTest/core/double/isOdd/double/isOdd/A01/t02: Fail
+LibTest/core/double/negate/double/negate/A01/t01: Fail
+LibTest/core/double/negate/double/negate/A01/t02: Fail
+LibTest/core/double/negate/double/negate/A01/t04: Fail
+LibTest/core/double/operator%/double/operator%/A02/t01: Fail
+LibTest/core/double/operatorAddition/double/operatorAddition/A02/t01: Fail
+LibTest/core/double/operatorDivision/double/operatorDivision/A02/t01: Fail
+LibTest/core/double/operatorGE/double/operatorGE/A02/t01: Fail
+LibTest/core/double/operatorGT/double/operatorGT/A02/t01: Fail
+LibTest/core/double/operatorLE/double/operatorLE/A02/t01: Fail
+LibTest/core/double/operatorLT/double/operatorLT/A02/t01: Fail
+LibTest/core/double/operatorMultiplication/double/operatorMultiplication/A02/t01: Fail
+LibTest/core/double/operatorSubtraction/double/operatorSubtraction/A02/t01: Fail
+LibTest/core/double/operator~div/double/operator~div/A01/t05: Fail
+LibTest/core/double/operator~div/double/operator~div/A02/t01: Fail
+LibTest/core/double/remainder/double/reminder/A02/t01: Fail
+LibTest/core/double/round/double/round/A01/t01: Fail
+LibTest/core/double/toRadixString/double/toRadixString/A01/t01: Fail
+LibTest/core/double/toStringAsExponential/double/toStringAsExponential/A01/t01: Fail
+LibTest/core/double/toStringAsFixed/double/toStringAsFixed/A02/t01: Fail
+LibTest/core/double/toStringAsPrecision/double/toStringAsPrecision/A01/t01: Fail
+LibTest/core/int/compareTo/int/compareTo/A01/t01: Fail
+LibTest/core/int/hashCode/int/hashCode/A01/t01: Fail
+LibTest/core/int/isEven/int/isEven/A01/t01: Fail
+LibTest/core/int/isOdd/int/isOdd/A01/t01: Fail
+LibTest/core/int/operator%/int/operator%/A01/t01: Fail
+LibTest/core/int/operator%/int/operator%/A01/t02: Fail
+LibTest/core/int/operator%/int/operator%/A01/t03: Fail
+LibTest/core/int/operator\+/int/operator\+/A01/t01: Fail
+LibTest/core/int/operator\^/int/operator\^/A01/t01: Fail
+LibTest/core/int/operator_AND/int/operator/AND/A01/t01: Fail
+LibTest/core/int/operator_GT/int/operator/GT/A01/t01: Fail
+LibTest/core/int/operator_LT/int/operator/LT/A01/t01: Fail
+LibTest/core/int/operator_OR/int/operator/OR/A01/t01: Fail
+LibTest/core/int/operator_l_shift/int/operator/l/shift/A01/t01: Fail
+LibTest/core/int/operator_mul/int/operator/mul/A01/t01: Fail
+LibTest/core/int/operator_negate/int/operator/negate/A01/t01: Fail
+LibTest/core/int/operator_r_shift/int/operator/r/shift/A01/t01: Fail
+LibTest/core/int/operator_~div/int/operator/~div/A01/t02: Fail
+LibTest/core/int/remainder/int/remainder/A01/t01: Fail
+LibTest/core/int/remainder/int/remainder/A01/t02: Fail
+LibTest/core/int/remainder/int/remainder/A01/t03: Fail
+LibTest/core/int/toDouble/int/toDouble/A01/t01: Fail
+LibTest/core/int/toRadixString/int/toRadixString/A01/t01: Fail
+LibTest/core/int/toStringAsExponential/int/toStringAsExponential/A01/t01: Fail
+LibTest/core/int/toStringAsFixed/int/toStringAsFixed/A01/t01: Fail
+LibTest/core/int/toStringAsPrecision/int/toStringAsPrecision/A01/t01: Fail
+
+# Started failing after making @static-type-error non-negative.
+[ $component == dartc ]
+LibTest/core/Map/forEach/Map/forEach/A01/t03: Fail
+LibTest/core/Map/operator\[]/Map/operator\[]/A01/t03: Fail
+LibTest/core/Map/operator\[]=/Map/operator\[]=/A01/t03: Fail
+LibTest/core/Map/putIfAbsent/Map/putIfAbsent/A01/t04: Fail
+
+# Failing test due to rename of StopWatch to Stopwatch.
+[ $component == dartc ]
+LibTest/core/StopWatch/StopWatch/StopWatch/A01/t01: Fail
+LibTest/core/StopWatch/start/StopWatch/start/A01/t01: Fail
+LibTest/core/StopWatch/start/StopWatch/start/A01/t02: Fail  # Also broken test.
+LibTest/core/StopWatch/start/StopWatch/start/A01/t03: Fail
+LibTest/core/StopWatch/elapsed/StopWatch/elapsed/A01/t01: Fail
+LibTest/core/StopWatch/elapsed/StopWatch/elapsed/A01/t02: Fail
+LibTest/core/StopWatch/elapsed/StopWatch/elapsed/A01/t03: Fail
+LibTest/core/StopWatch/frequency/StopWatch/frequency/A01/t01: Fail
+
+[ $component == dartium ]
+*: Skip
+
+
+[ $component == chromium ]
+*: Skip
+
+[ $component == frogium ]
+*: Skip
