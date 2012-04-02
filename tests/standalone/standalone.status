@@ -1,0 +1,50 @@
+# Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+TimeoutTest: Skip  # Timeout test for testing the test runner.
+FailTest: Fail, OK # Fails intentionally
+OutOfMemoryTest: Skip # Issue 2345
+io/HttpServerEarlyClientCloseTest: Skip # To be fixed asap.
+io/HttpServerSocketTest: Skip # To be fixed asap.
+
+[ $runtime == vm && $checked ]
+# These tests have type errors on purpose.
+io/ProcessInvalidArgumentsTest: Fail, OK
+io/DirectoryInvalidArgumentsTest: Fail, OK
+io/FileInvalidArgumentsTest: Fail, OK
+
+[ $runtime == vm]
+io/ManyEchoServerTest: Skip        # Bug 5103754
+# These tests fail, crash, and timeout to test the testing infrastructure.
+io/TestExtensionTest: Fail  # shared library in wrong place (issue 1817)
+
+[ $runtime == vm && $system == macos]
+# This test fails with "Too many open files" on the Mac OS buildbot.
+io/SocketManyConnectionsTest: Skip
+io/TestExtensionTest: Skip  # Extensions not implemented on MacOS
+
+[ $runtime == vm && $system == windows]
+io/TestExtensionTest: Skip  # Extensions not implemented on Windows
+io/HttpShutdownTest: Skip  # Currently times out on windows
+
+[ $compiler == none && $runtime == drt ]
+io/*: Skip # Don't run tests using dart:io in the browser
+
+[ $compiler == dartc]
+*: Skip
+
+[ $compiler == frog || $compiler == frogsh || ($compiler == dart2js && $runtime == drt) ]
+*: Skip
+
+
+[ $arch == x64 ]
+MediumIntegerTest: Fail # Issue 1146.
+
+
+[ $arch == arm ]
+*: Skip
+
+
+[ $arch == simarm ]
+*: Skip

@@ -1,0 +1,31 @@
+# Copyright (c) 2011, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+EvaluatorTest: Skip                    # TODO(jimhug): Skipped until ready to work on REPL.
+InheritanceOrderingTest: Skip          # TODO(jimhug): Fix flakiness uniformly
+PrototypePatchingTest: Skip            # TODO(jimhug): Fix flakiness uniformly
+
+
+[ $checked ]
+NativeCheckedFieldsFrogTest: Fail
+
+[ $compiler == frogsh && $checked]
+NodeProcessTest: Fail # Checked mode failure -- looked like it failed to find assert$WritableStream
+NativeCheckedFieldsFrogTest: Fail
+
+
+[ $runtime == vm || $compiler == dartc || $compiler == frog || $compiler == dart2js || ($runtime == drt && $compiler == none) ]
+Node*Test: Skip
+
+
+[ $compiler == frog || $compiler == frogsh || $compiler == dartc || ($runtime == drt && $compiler == none) || $compiler == dart2js ]
+FrogServerTest: Skip
+
+
+[ $runtime == chrome || $runtime == ie || $runtime == safari || $runtime == opera || $runtime == ff ]
+*: Skip
+
+
+[ $compiler == dart2js && $runtime == drt ]
+*: Skip

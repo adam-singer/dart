@@ -1,0 +1,478 @@
+# Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+# This directory contains tests that are intended to show the
+# current state of the language.
+
+# In order to maintain maximum test coverage for all builds,
+# please use the following procedure to mark a test
+# failed on architectures other than the one you are working on.
+#
+# 1) Copy the old version of the test to
+#    tests/language/src/TestName[Dartc|VM|Frog]Test.dart.
+#    to maintain coverage.
+# 2) File a bug on each architecture for the failure due to the language change.
+# 3) Update the language/src directory with the updated test.
+
+[ $compiler == none ]
+GCTest: Fail # Issue 1487
+ImpliedInterfaceTest: Fail # Bug 5349944
+FBoundedQuantificationTest: Skip # Issue 439
+FieldOverrideTest/none: Fail  # Issue 742: field shadowing now allowed
+FieldOverrideTest/01: Fail    # Issue 742: field shadowing now allowed
+FieldOverrideTest/02: Fail    # Issue 742: field shadowing now allowed
+SuperFieldAccessTest: Fail    # Issue 742: field shadowing now allowed
+PseudoKWIllegalTest/03: Fail  # Issue 356
+PseudoKWIllegalTest/08: Fail  # Issue 356
+PseudoKWIllegalTest/10: Fail  # Issue 356
+PseudoKWIllegalTest/14: Fail  # Issue 356
+
+ImplicitThisTest/01: Fail # Issue 374 (not yet specified)
+ImplicitThisTest/02: Fail # Issue 374
+ImplicitThisTest/03: Fail # Issue 374
+ImplicitThisTest/04: Fail # Issue 374
+ImplicitThisTest/none: Fail # Issue 374
+
+# These bugs refer currently ongoing language discussions.
+Constructor5Test: Fail          # (Discussion ongoing)
+Constructor6Test: Fail          # (Discussion ongoing)
+FunctionTypeAliasNegativeTest: Fail # Spec not clear about self referencing types.
+
+# Bad tests needing to be fixed.
+TypeVariableScopeTest/00: Fail
+TypeVariableScopeTest/01: Fail
+TypeVariableScopeTest/02: Fail
+TypeVariableScopeTest/03: Fail
+TypeVariableScopeTest/04: Fail
+TypeVariableScopeTest/05: Fail
+
+# Regular bugs which should be fixed.
+
+ConstInit6NegativeTest: Fail       # Issue 811
+SuperFirstConstructorTest: Fail # Issue 1372.
+
+# Issue 1427
+CyclicTypeVariableTest: Fail
+CyclicTypeVariableTest/01: Fail
+CyclicTypeVariableTest/02: Fail
+CyclicTypeVariableTest/03: Fail
+CyclicTypeVariableTest/04: Fail
+CyclicTypeVariableTest/05: Fail
+
+# Issue 1034
+ConstructorDuplicateInitializersTest/01: Fail
+ConstructorDuplicateInitializersTest/02: Fail
+
+# Issue 1355
+CallOperatorTest: Fail
+
+ConstConstructorSyntaxTest/05: Fail
+GetSetSyntaxTest/04: Fail # Issue 1569
+GetSetSyntaxTest/05: Fail # Issue 1569
+GetSetSyntaxTest/06: Fail # Issue 1569
+GetSetSyntaxTest/07: Fail # Issue 1569
+GetSetSyntaxTest/08: Fail # Issue 1569
+GetSetSyntaxTest/09: Fail # Issue 1569
+GetSetSyntaxTest/10: Fail # Issue 1569
+GetSetSyntaxTest/11: Fail # Issue 1569
+GetSetSyntaxTest/12: Fail # Issue 1569
+GetSetSyntaxTest/13: Fail # Issue 1569
+GetSetSyntaxTest/14: Fail # Issue 1569
+GetSetSyntaxTest/15: Fail # Issue 1569
+
+
+AssignStaticTypeTest/01: Skip # Issue 2070 (fails only in checked mode)
+AssignStaticTypeTest/02: Skip # Issue 2070 (fails only in checked mode)
+
+ConstructorRedirectTest/01: Fail # Issue 2103.
+
+# DartC or Frog specific tests that should not be run by the VM
+*DartcTest: Skip
+*DartcNegativeTest: Skip
+*FrogTest: Skip
+*FrogNegativeTest: Skip
+
+[ $compiler == none && $unchecked ]
+
+IsNotClass3NegativeTest: Fail  # Spec unclear.
+Prefix16NegativeTest: Fail    # Bug 5532534
+
+[ $compiler == none && $mode == debug ]
+GCTest: Skip  # Takes too long.
+
+[ $compiler == dartc ]
+AbstractSyntaxTest/01: Fail
+ApplicationNegativeTest: Fail
+AssertKeywordNegativeTest: Fail
+AssertTest: Fail             # Uses AssertError class. Bug 4385894.
+AssignInstanceMethodNegativeTest: Fail
+BadNamedParametersTest: Fail      # Issue 1941
+BadNamedParameters2Test: Fail     # Issue 1941
+BodyLessConstructorWrongArgNegativeTest: Fail
+CallOperatorTest: Pass # Issue 1355
+CharEscapeTest: Pass # Issue 1654
+ClosureCallWrongArgumentCountNegativeTest: Fail
+CompileTimeConstant3Test: Fail # Issue 1780
+ConstConstructorSyntaxTest/05: Fail
+ConstCounterNegativeTest: Fail    # issue 1655
+Constructor3NegativeTest: Fail
+ConstructorCallWrongArgumentCountNegativeTest: Fail
+DefaultFactoryLibraryTest: Fail          # Issue 514
+DisablePrivacyTest: Skip  # Issue 1882: Needs --disable_privacy support.
+DuplicateImplementsTest: Skip # Issue 976
+Field3aNegativeTest: Fail
+FieldMethod4NegativeTest: Fail
+FinalSyntaxTest/*: Skip  # can't handle base case
+FunctionTypeAliasNegativeTest: Fail  # Bug 5231617.
+GenericParameterizedExtendsTest: Skip  # Bug 5392297
+GettersSettersType3Test: Fail # Issue 2351
+InstanceCallWrongArgumentCountNegativeTest: Fail
+Label2NegativeTest: Fail    # issue 1658
+Library4NegativeTest: Fail   # Bug 5406175
+ListLiteral4Test: Fail       # Issue 1343
+LiteralUnaryPlusTest/01: Fail # Issue 1399
+MapLiteral4Test: Fail        # Issue 1343
+NamedParametersNegativeTest: Fail
+NoSuchMethodNegativeTest: Fail
+OverrideFieldMethod1NegativeTest: Fail # Bug 5215249
+OverrideFieldMethod2NegativeTest: Fail # Bug 5215249
+OverrideFieldMethod3NegativeTest: Fail # Bug 5215249
+OverrideFieldMethod4NegativeTest: Fail # Bug 5215249
+OverrideFieldMethod5NegativeTest: Fail # Bug 5215249
+OverrideFieldMethod6NegativeTest: Fail # Bug 5215249
+OverrideFieldTest/04: Fail             # Bug 5215249
+OverrideMethodWithFieldTest/01: Fail   # Bug 5215249
+Prefix101Test: Fail # Allow multiple imports with same prefix.
+Prefix11NegativeTest: Fail             # Bug 5406175
+Prefix12NegativeTest: Fail             # Bug 5406175
+Prefix16NegativeTest: Fail             # Bug 5532534
+Prefix3NegativeTest: Fail              # Bug 5406175
+Prefix6NegativeTest: Fail
+PrivateFactoryResolutionNegativeTest: Fail # Issue 2275
+PrivateMember3NegativeTest: Fail
+PseudoKWIllegalTest/01: Fail # Issue 356
+PseudoKWIllegalTest/02: Fail # Issue 356
+PseudoKWIllegalTest/03: Fail # Issue 356
+PseudoKWIllegalTest/04: Fail # Issue 356
+PseudoKWIllegalTest/05: Fail # Issue 356
+PseudoKWIllegalTest/06: Fail # Issue 356
+PseudoKWIllegalTest/07: Fail # Issue 356
+PseudoKWIllegalTest/08: Fail # Issue 356
+PseudoKWIllegalTest/09: Fail # Issue 356
+PseudoKWIllegalTest/10: Fail # Issue 356
+PseudoKWIllegalTest/11: Fail # Issue 356
+PseudoKWIllegalTest/12: Fail # Issue 356
+PseudoKWIllegalTest/13: Fail # Issue 356
+PseudoKWIllegalTest/14: Fail # Issue 356
+PseudoKWIllegalTest/15: Fail # Issue 356
+PseudoKWIllegalTest/16: Fail # Issue 356
+PseudoKWTest: Fail           # Issue 356
+ScopeNegativeTest: Fail      # Bug 4207538.
+StaticCallWrongArgumentCountNegativeTest: Fail
+StaticField1RunNegativeTest: Fail  # issue 1662
+StaticField1aRunNegativeTest: Fail # issue 1662
+StaticField2RunNegativeTest: Fail  # issue 1662
+StaticField2aRunNegativeTest: Fail # issue 1662
+StringEscape1NegativeTest: Fail # Issue 1351.
+StringEscape4NegativeTest: Fail # Issue 1351.
+StringInterpolation8Test: Fail # Issue 2126.
+SuperOperatorTest: Fail      # Bug 4995463.
+Switch3NegativeTest: Fail # issue 1663
+Switch7NegativeTest: Fail    # Bug 4208467.
+SwitchLabelTest: Fail        # Bug 4208467.
+SyntaxTest: Skip             # Bug 2107  Static type warnings in none case
+ThirdTest: Skip # Seems flaky in dartc after fixing test, was Bug 5339586
+Throw7NegativeTest: Fail     # Bug 4208459.
+TypeDartcTest: Fail          # Issue 2348
+ConstructorRedirectTest/01: Fail # Issue 2105.
+
+#
+# Add new dartc annotations above in alphabetical order
+#
+
+# VM or Frog specific tests that should not be run by DartC.
+*VMTest: Skip
+*VMNegativeTest: Skip
+*FrogTest: Skip
+*FrogNegativeTest: Skip
+
+
+[ $compiler == none && $runtime == drt ]
+# TODO: These need to be retriaged.
+DisablePrivacyTest: Skip
+RichardsTest: Fail
+StringEscape1NegativeTest: Skip
+GCTest: Skip # Issue 1487
+TypedMessageTest: Fail, Pass # Issue 2371.
+
+[ $compiler == frogsh ]
+ArithmeticTest: Fail # Issue 1470
+IntrinsifiedMethodsTest: Fail # Issue 1470
+
+[ ($compiler == frog || $compiler == frogsh) && $unchecked ]
+BoolTest: Fail # Issue 2092
+CompileTimeConstantCTest/01: Fail # integers as keys in literal maps.
+
+[ $compiler == frog  || $compiler == frogsh ]
+ExceptionTest: Fail # Issue 1785
+Factory3Test: Fail # Issue 417
+Factory2NegativeTest: Fail
+CallThroughNullGetterTest: Fail # Throw ObjectNotClosure instead of NullPointerException.
+CompileTimeConstantCTest/02: Fail # string-concatenated (+) keys in literal maps.
+CompileTimeConstantDTest: Fail # doesn't recognize 400 + z (with z parameter of constructor) as compile-time constant.
+CompileTimeConstantETest: Fail
+CompileTimeConstantGTest: Fail # compile time constants with super calls to optional arguments.
+CompileTimeConstantKTest: Fail # Constant maps are not canonicalized correctly if the same key appears multiple times.
+DisablePrivacyTest: Skip  # Issue 1882: Needs --disable_privacy support.
+DoubleToStringAsExponentialTest: Fail # fails due to -0.0.
+# Once the -0.0 in DoubleToStringAsFixedTest is fixed it will probably need to
+# be moved to a
+# [ $compiler == frog ]
+# section.
+DoubleToStringAsFixedTest: Fail # fails due to -0.0 and due to rounding in constant propagation.
+DoubleToStringAsPrecisionTest: Fail # fails due to -0.0.
+ExtendTypeParameterNegativeTest: Skip # Issue 886
+ExtendTypeParameter2NegativeTest: Skip # Issue 886
+FinalSyntaxTest/none: Fail
+GetSetSyntaxTest/00: Fail # Issue 1571
+GetSetSyntaxTest/01: Fail # Issue 1571
+GetSetSyntaxTest/02: Fail # Issue 1571
+GetSetSyntaxTest/03: Fail # Issue 1571
+GetSetSyntaxTest/04: Fail # Issue 1571
+GetSetSyntaxTest/05: Fail # Issue 1571
+GetSetSyntaxTest/06: Fail # Issue 1571
+GetSetSyntaxTest/07: Fail # Issue 1571
+GetSetSyntaxTest/08: Fail # Issue 1571
+GetSetSyntaxTest/09: Fail # Issue 1571
+GetSetSyntaxTest/10: Fail # Issue 1571
+GetSetSyntaxTest/11: Fail # Issue 1571
+GetSetSyntaxTest/12: Fail # Issue 1571
+GetSetSyntaxTest/13: Fail # Issue 1571
+GetSetSyntaxTest/14: Fail # Issue 1571
+GetSetSyntaxTest/15: Fail # Issue 1571
+ImplementTypeParameterNegativeTest: Skip # Issue 887
+FactoryImplementationTest: Fail # Issue 523
+PseudoKWTest: Fail  # Issue 356
+NamingTest: Fail    # Issue 356
+DuplicateImplementsTest: Skip   # Issue 976
+DoubleToString: Fail  # Prints "3" instead of "3.0".
+ThirdTest: Fail # Issue 1511
+TryCatchSyntaxTest/08: Fail
+TryCatchSyntaxTest/09: Fail
+CondExprTest: Fail
+StringInterpolation8Test: Fail # Issue 2127
+SuperFieldAccessTest: Fail # Issue 1695
+CompileTimeConstant6Test: Fail
+ConstructorRedirectTest/01: Fail # Issue 2104.
+
+SavannahTest: Skip # TODO(jimhug): Seems flaky on some configs - investigate.
+
+# VM or DartC specific tests not to be run by Frog. See language.status
+*VMTest: Skip
+*VMNegativeTest: Skip
+*DartcTest: Skip
+*DartcNegativeTest: Skip
+# Currently, these patterns skip three tests:
+# MathVMTest - correctly skipped as this relies on VM guarantees
+#    - should add a version of this with the --enable_type_checks flag
+# TypeVMTest - correctly skipped as this relies on detailed of TypeError
+# TypeDartcTest - should pass, need refactoring to get frog safe version
+
+BitOperationsTest: Fail  # relies on big integers not available in JS
+CallOperatorTest: Fail # Issue 1355
+CallThroughGetterTest: Fail
+CharEscapeTest: Fail # relies on 4 byte unicode not available in JS
+ClassOverrideNegativeTest: Fail
+ClosureSharedStateTest: Fail
+ConstObjectsAreImmutableTest: Fail
+DefaultFactoryLibraryTest: Fail    # Issue 514
+DynamicTest: Fail
+ExampleConstructorTest: Fail
+Constructor2Test: Fail
+Constructor3Test: Fail
+Constructor5Test: Fail    # Order of initializers.
+Constructor6Test: Fail    # Parse failure in initializers.
+ExecuteFinally6Test: Fail
+ExpectTest: Fail
+FauxverrideTest/03: Fail
+FauxverrideTest/05: Fail
+Field3NegativeTest: Fail  # Issue 729
+FinalParamNegativeTest: Fail
+For2Test: Fail
+FunctionSyntaxTest: Fail
+FunctionTest: Fail
+FunctionTypeAliasNegativeTest: Fail
+FunctionTypeAliasTest: Fail
+FunctionTypeAlias2Test: Fail
+FunctionTypeAlias3Test: Fail
+FunctionTypeAlias4Test: Fail
+FunctionTypeParameter2Test: Fail
+FunctionTypeParameterTest: Fail
+GenericDeepTest: Fail
+GenericInstanceofTest: Fail
+GenericInstanceof2Test: Fail
+GenericSyntaxTest: Fail
+GenericTest: Fail
+GenericsTest: Fail
+GetterClosureExecutionOrderTest: Pass # TODO(jmesserly): I don't think this is really passing in the static case
+ImplicitScopeTest: Fail
+ImpliedInterfaceTest: Fail
+Instanceof2Test: Fail
+InterfaceFactory3NegativeTest: Fail
+IsNotClass4NegativeTest: Fail
+LabelTest: Fail
+ListLiteral3Test: Fail # vm and frog throw different exceptions
+ListLiteral4Test: Fail # missing type checks on index operations
+ListTest: Fail         # array bound checks not implemented
+LocalFunction3Test: Fail
+LocalFunctionTest: Fail
+ManyGenericInstanceofTest: Fail
+MapLiteral4Test: Fail # missing checks on map index operations
+MathTest: Fail
+MethodOverrideTest: Fail # checking on precise type rules for methods
+NamedParametersPassingFalsyTest: Fail
+NamedParametersTypeTest: Fail
+NamedParametersWithConversionsTest: Fail
+NonConstSuperNegativeTest: Fail
+NullPointerExceptionTest: Fail
+NullTest: Fail
+NullToStringTest: Fail
+NumbersTest: Fail
+OverrideFieldTest/01: Fail
+OverrideFieldTest/04: Fail
+OverrideMethodWithFieldTest/01: Fail
+ParameterInitializer5NegativeTest: Fail  # Issue 581
+Prefix101Test: Fail # Allow multiple imports with same prefix.
+Prefix8NegativeTest: Fail
+Prefix9NegativeTest: Fail
+Prefix11NegativeTest: Fail
+Prefix16NegativeTest: Fail
+Prefix20NegativeTest: Fail
+PrivateMemberTest: Fail
+PrivateMember1NegativeTest: Fail
+PrivateMember2NegativeTest: Fail
+PrivateMember3NegativeTest: Fail
+PrivateTest: Fail
+RegExp3Test: Fail
+ScopeNegativeTest: Fail
+ScriptNegativeTest: Fail
+SuperImplicitClosureTest: Fail
+SuperTest: Fail  # this is testing precise ordering of super constructor call
+SwitchLabelTest: Fail
+TypeChecksInFactoryMethodTest: Fail # Issue 925
+TypeVariableBoundsTest/00: Fail # Issue 2134
+TypeVariableBoundsTest/10: Fail # Issue 2134
+TypeVariableIdentifierExpressionNegativeTest: Fail # Issue 643
+TypeVariableShadowsClass: Fail # Issue 643
+WrongNumberTypeArgumentsTest/00: Fail # Issue 2134
+ImplicitThisTest/01: Fail # Issue 376
+ImplicitThisTest/02: Fail # Issue 376
+ImplicitThisTest/03: Fail # Issue 376
+ImplicitThisTest/04: Fail # Issue 376
+ImplicitThisTest/none: Fail # Issue 376
+
+#Issue 1308
+NamedParameters2Test: Fail
+NamedParameters3Test: Fail
+NamedParameters4Test: Fail
+
+StringEscape4NegativeTest: Fail # Issue 1352
+
+Issue4515170Test: Fail
+
+[ $runtime == chrome ]
+StringEscape1NegativeTest: Skip
+
+[ $runtime == ff || $runtime == safari || $runtime == ie) ]
+Closure3Test: Fail
+MethodInvocationTest: Fail
+Private3Test: Fail
+StackTraceTest: Fail
+StringInterpolateNPETest: Fail
+
+# For these tests Frog generates invalid JS. Chrome throws a SyntaxError, but
+# other browsers don't, so they eventually timeout. See issue 1515.
+# In any case, we shouldn't be relying on SyntaxError.
+Label2NegativeTest: Skip
+Label3NegativeTest: Skip
+Label5NegativeTest: Skip
+Label6NegativeTest: Skip
+LabelTest: Skip
+StringEscape1NegativeTest: Skip
+Switch3NegativeTest: Skip
+Switch4NegativeTest: Skip
+ExecuteFinally6Test: Skip
+
+# TODO(jmesserly): now that we have a bot, we need to set up Opera testing.
+[ $runtime == opera ]
+*: Skip
+
+[ $runtime == ff ]
+NamingTest: Fail
+StackOverflowTest: Fail
+ExecuteFinally7Test: Skip
+StaticFinalField2NegativeTest: Skip
+
+[ $runtime == ff && $system == windows ]
+CTConst2Test: Pass,Fail  # Issue 2101
+
+[ $runtime == ie ]
+StackOverflowTest: Fail
+ObjectDynamicMethodTest: Fail
+NumberSyntaxTest: Fail
+
+[ $runtime == ie && ($system == linux || $system == mac) ]
+*: Skip
+
+[ $runtime == safari && ($system == linux || $system == windows) ]
+*: Skip
+
+[ ($compiler == frog || $compiler == frogsh) && $unchecked ]
+PrivateMemberTest/01: Fail # test seems bad - see issue #353
+PrivateMemberTest/02: Fail # test seems bad - see issue #353
+PrivateMemberTest/03: Fail # test seems bad - see issue #353
+PrivateMemberTest/04: Fail # test seems bad - see issue #353
+
+[ ($compiler == frog || $compiler == frogsh) && $checked ]
+PrivateMemberTest/none: Fail # test seems bad - see issue #353
+AssignStaticTypeTest/01: Fail # Unrecognized option: --no-enable-type-checks.
+AssignStaticTypeTest/02: Fail # Unrecognized option: --no-enable-type-checks.
+AssignStaticTypeTest/03: Fail # Unrecognized option: --no-enable-type-checks.
+AssignStaticTypeTest/04: Fail # Unrecognized option: --no-enable-type-checks.
+TypeVariableBoundsTest/01: Fail # Issue 2135
+TypeVariableBoundsTest/02: Fail # Issue 2135
+TypeVariableBoundsTest/05: Fail # Issue 2135
+TypeVariableBounds2Test/00: Fail # Issue 2135
+TypeVariableBounds2Test/03: Fail # Issue 2135
+TypeVariableBounds2Test/05: Fail # Issue 2135
+
+[ ($compiler == frog || $compiler == frogsh) && $runtime == d8 ]
+# these tests are inconsistent in frogium and frogsh-node, investigate
+StaticField1RunNegativeTest: Pass
+StaticField2RunNegativeTest: Pass
+SyntaxTest/28: Fail # Issue 1109
+SyntaxTest/29: Fail # Issue 1109
+SyntaxTest/31: Fail # Issue 1109
+SyntaxTest/32: Fail # Issue 1109
+SyntaxTest/33: Fail # Issue 1109
+LiteralUnaryPlusTest/01: Fail # Issue 1400
+
+[ $compiler == frog || $compiler == frogsh ]
+StringEscape3NegativeTest: Fail # Issue 1352
+
+[ $compiler == frog && $runtime == drt ]
+# these tests are inconsistent in frogium and frogsh-node, investigate
+StaticField1RunNegativeTest: Pass # but error is not correct
+StaticField2RunNegativeTest: Pass # but error is not correct
+
+[ $compiler == frog && $mode == debug ]
+ConstructorRedirect1NegativeTest: Skip # Undiagnosed infinite loop.
+ConstructorRedirect2NegativeTest: Skip # Undiagnosed infinite loop.
+
+[ $arch == simarm ]
+*: Skip
+
+[ $arch == arm ]
+*: Skip
+

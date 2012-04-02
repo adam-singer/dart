@@ -1,0 +1,81 @@
+# Copyright (c) 2011, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+dom/WebGL1Test: Skip  # Issue 1495
+
+[ $compiler == none && $runtime == drt ]
+# TODO(vsm): Triage DOM tests.
+dom/AudioContextTest: Fail
+dom/HTMLElementTest: Fail
+dom/IsolateLightTest: Fail
+dom/NativeGCTest: Fail  # Issue 1448.
+dom/TypedArrays2Test: Fail   # Dartium needs to implement 3 arg constructor
+html/frog_html_tests: Skip
+html/TypedArrays2Test: Fail  # Dartium dart:html needs to implement 3 arg constructor
+dom/TypedArrays3Test: Fail   # Investigate: setElements is not generated.
+html/TypedArrays3Test: Fail  # Investigate: setElements is not generated.
+html/html_tests: Pass, Fail   # Issue 1946.
+
+[ $component == dartium && $system == windows ]
+dom/DOMIsolatesTest: Skip
+
+[ $compiler == none && $runtime == drt && $mode == debug ]
+# TODO(vsm): Triage Dartium failures.
+dom/CSSTest: Skip
+dom/DOMIsolatesTest: Skip
+dom/NativeGCTest: Skip
+dom/TypedArrays1Test: Skip
+
+[ $compiler == frog && ($runtime == drt || $runtime == ie || $runtime == safari || $runtime == ff || $runtime == chrome || $runtime == opera) ]
+dom/WindowNSMETest: Fail # Issue 1837, frog puts top-level members in the global JS namespace.
+
+[ $runtime == ie || $runtime == safari || $runtime == ff || $runtime == chrome || $runtime == opera || ($runtime == drt && $compiler == frog)]
+# TODO(vsm): Triage DOM tests.
+dom/DOMIsolatesTest: Fail
+dom/HTMLElementTest: Fail
+dom/WindowOpenTest: Fail
+
+[ $runtime == chrome || $runtime == ie || $runtime == safari || $runtime == ff || $runtime == opera ]
+dom/ImplementationTest: Fail
+dom/HistoryTest: Fail
+html/html_tests: Pass, Fail   # "Measurement measurement is async but before" See issue 1946.
+
+[ $runtime == ff || $runtime == safari || $runtime == ie ]
+html/html_tests: Fail
+# TODO(vsm): Triage DOM failures on other browsers.
+dom/*: Skip
+
+[ $runtime == ie ]
+html/TypedArrays1Test: Skip   # ie9 does not have typed arrays.
+html/TypedArrays2Test: Skip
+html/TypedArrays3Test: Skip
+
+# TODO(nweiz): enable this test again once the functionality being tested
+# is supported.
+[ ($compiler == frog && $runtime == drt) || $runtime == safari || $runtime == ie]
+html/frog_html_tests: Skip # Issue 1884
+
+[ $runtime == ie && ($system == linux || $system == mac) ]
+*: Skip
+
+[ $runtime == safari && ($system == linux || $system == windows) ]
+*: Skip
+
+# 'client' tests import the DOM library, so they only make sense in
+# a browser environment.
+[ $compiler == dartc ]
+*: Skip
+
+[ $runtime == vm ]
+*: Skip
+
+[ $compiler == frog && $runtime == d8 ]
+*: Skip
+
+[ $compiler == frogsh && $runtime == d8 ]
+*: Skip
+
+# TODO(jmesserly): now that we have a bot, we need to set up Opera testing.
+[ $runtime == opera ]
+*: Skip

@@ -1,0 +1,30 @@
+# Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+[ $arch == simarm ]
+*: Skip
+
+[ $compiler == frog || $compiler == frogsh ]
+# Dartdoc only runs on the VM.
+DartdocTest: Skip
+MarkdownTest: Skip
+DummyCompilerTest: Fail
+
+[ $runtime == vm || $compiler == dartc || ($compiler == none && $runtime == drt) ]
+# TODO(rnystrom): Right now, the VM tests can't access frog/ and client/ which
+# dartdoc uses, so disable for now. Once the deps files are unified this should
+# be fixed.
+DartdocTest: Skip
+MarkdownTest: Skip
+
+[ $compiler == none && $runtime == drt ]
+DummyCompilerTest: Fail # Issue 2264.
+
+
+[ $compiler == dartc ]
+DummyCompilerTest: Fail # Issue 2263.
+
+
+[ $compiler == dart2js && $runtime == drt ]
+*: Skip

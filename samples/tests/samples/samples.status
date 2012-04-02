@@ -1,0 +1,60 @@
+# Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+[ $compiler == dartc ]
+chat/*: Skip
+
+[ $arch == x64 ]
+*: Skip
+
+[ $arch == simarm ]
+*: Skip
+
+[ $arch == arm ]
+*: Skip
+
+
+[ $runtime == drt ]
+chat/ChatServerTest: Skip
+chat/HttpTest: Skip
+chat/HttpParserTest: Skip
+chat/UrlEncodingTest: Skip
+lib/layout/LayoutTest: Skip # Issue 152
+lib/touch/TouchTest: Skip # Issue 157
+ChatServerTest: Skip
+HttpTest: Skip
+HttpParserTest: Skip
+UrlEncodingTest: Skip
+#proxy/*_generatedTest: Skip
+
+[ $compiler == none && $runtime == drt ]
+dartcombat/DartCombatTest: Skip # Bug 5279716
+DartCombatTest: Skip
+proxy/MintMakerFullyIsolated_generatedTest: Skip
+
+[ $compiler == none && $runtime == drt && $mode == debug ]
+swarm/SwarmTest: Skip # Issue 1617
+SwarmTest: Skip
+
+[ ($compiler == frog && $runtime == drt) || ($runtime == chrome || $runtime == ff || $runtime == safari)) ]
+dartcombat/DartCombatTest: Skip # passes locally but timeout on bot?
+DartCombatTest: Skip
+
+[ $runtime == safari ]
+PromiseBasedTest: Skip
+
+[ $runtime == vm]
+dartcombat/DartCombatTest: Skip
+DartCombatTest: Skip
+SwarmTest: Skip
+total/TotalTest: Skip
+swarm/SwarmTest: Skip
+lib/layout/LayoutTest: Skip
+lib/touch/TouchTest: Skip
+lib/observable/ObservableTest: Skip
+lib/util/UtilTest: Skip
+lib/view/ViewTest: Skip
+
+[ ($compiler == frog || $compiler == frogsh) && $runtime == d8 ]
+*: Skip

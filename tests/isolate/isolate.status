@@ -1,0 +1,63 @@
+# Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+[ $runtime == vm ]
+Isolate2NegativeTest: Skip  # Need to resolve correct behaviour.
+SerializationTest: Skip  # tests frog-specific serialization code
+*BrowserTest: Skip
+*BrowserNegativeTest: Skip
+
+[ ($compiler == none || $compiler == dart2js) && $runtime == drt ]
+SerializationTest: Skip  # tests frog-specific serialization code
+*APIv2*: Skip # new api for isolates not implemented in the VM yet.
+
+[ $compiler == dartc ]
+SerializationTest: Skip  # tests frog-specific serialization code
+IsolateNegativeTest: Fail    # status change with --check-only
+Isolate2NegativeTest: Fail   # status change with --check-only
+*APIv2*: Skip # new api for isolates not in corelib yet.
+
+[ $compiler == frog || $compiler == frogsh ]
+*BrowserTest: Skip
+*BrowserNegativeTest: Skip
+
+[ $runtime == drt && ($compiler == frog || $compiler == dart2js) || $runtime == ff || $runtime == chrome || $runtime == safari || $runtime == ie || $runtime == opera ]
+*StandaloneTest: Skip
+*StandaloneNegativeTest: Skip
+
+# TODO(jmesserly): investigate why these are flaky on actual browsers
+[ $compiler == frog && ($runtime == drt || $runtime == ff || $runtime == chrome || $runtime == safari || $runtime == ie || $runtime == opera) ]
+NestedSpawn2Test: Skip
+NestedSpawnTest: Skip
+IsolateNegativeTest: Skip
+Isolate2NegativeTest: Skip
+
+[ $runtime == safari ]
+CrossIsolateMessageTest: Skip      # Depends on 32/64 bit Safari. See Issue 1120
+MixedTest: Pass,Fail               # Depends on 32/64 bit Safari. See Issue 1120
+Mixed2Test: Pass,Fail              # Depends on 32/64 bit Safari. See Issue 1120
+MessageTest: Skip
+
+[ $runtime == ie && $system == windows ]
+APIv2*: Skip
+
+[ $runtime == safari && $system == macos ]
+APIv2*: Skip
+
+[ $runtime == ie && ($system == linux || $system == mac) ]
+*: Skip
+
+[ $runtime == safari && ($system == linux || $system == windows) ]
+*: Skip
+
+# TODO(jmesserly): now that we have a bot, we need to set up Opera testing.
+[ $runtime == opera ]
+*: Skip
+
+[ $arch == simarm ]
+*: Skip
+
+[ $arch == arm ]
+*: Skip
+

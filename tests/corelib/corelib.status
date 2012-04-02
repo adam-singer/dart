@@ -1,0 +1,56 @@
+# Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+[ $compiler == none ]
+UnicodeTest: Fail        # Bug 5163868
+*DartcTest: Skip
+
+[ $arch == ia32 ]
+
+
+[ $compiler == dartc ]
+*VMTest: Skip
+
+[ $compiler == frog || $compiler == frogsh ]
+# VM or DartC specific tests not to be run by Frog. See language.status.
+*VMTest: Skip
+*VMNegativeTest: Skip
+*DartcTest: Skip
+*DartcNegativeTest: Skip
+# Note: Correctly skips 4 VMTests that rely on VM internals
+
+ConstList*: Fail # 'const' is not currently checked.
+CoreRuntimeTypesTest: Fail
+ForInTest: Fail
+ListTest: Fail
+MapsTest: Fail
+MathParseDoubleTest: Fail
+RegExpAllMatchesTest: Fail
+RegExp4Test: Fail # New test added on 10/28.
+StringPatternTest: Fail
+StringSubstringTest: Fail
+StringTest: Fail  # Needs index out of range checks.
+
+[ $compiler == frogsh ]
+DoubleCompareTest: Fail
+
+[ $runtime == ff || $runtime == ie ]
+UnicodeTest: Fail
+
+# TODO(jmesserly): now that we have a bot, we need to set up Opera testing.
+[ $runtime == opera ]
+*: Skip
+
+[ $runtime == ie && ($system == linux || $system == mac) ]
+*: Skip
+
+[ $runtime == safari && ($system == linux || $system == windows) ]
+*: Skip
+
+[ $arch == simarm ]
+*: Skip
+
+[ $arch == arm ]
+*: Skip
+
